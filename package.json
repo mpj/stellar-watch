@@ -1,0 +1,22 @@
+{
+  "name": "stellar-watch",
+  "version": "1.0.0",
+  "description": "A service that can do queries on Stellar that updates in real time, that are not offered by the Stellar API. ",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mpj/stellar-watch.git"
+  },
+  "author": "Mattias Petter Johansson <mpj@mpj.me>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mpj/stellar-watch/issues"
+  },
+  "homepage": "https://github.com/mpj/stellar-watch",
+  "dependencies": {
+    "express": "~4.9.5"
+  }
+}
