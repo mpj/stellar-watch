@@ -20,10 +20,18 @@ server = app.listen 3000, ->
     .pipe collection 'stellar-watch-test'
 
   stellarSocket = socket 'ws://live.stellar.org:9001'
-  _(stellarSocket).filter((x) -> x.transaction ).pipe bus 'transaction-new'
+  _(stellarSocket)
+    .filter (event) ->
+      event.transaction and event.transaction.TransactionType isnt 'Payment'
+    .through(bus('log-stellar'))
+    .pipe(bus('transaction-new'))
 
   stellarSocket.write
     "command" : "subscribe",
     "streams" :  [ "transactions" ]
+
+  _(bus.envelopes()).each (e) ->
+    console.log("")
+    console.log("Envelope", e)
 
   console.log 'Listening on port %d', server.address().port

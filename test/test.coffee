@@ -20,13 +20,14 @@ describe 'service', ->
     bus = snurra()
     _(bus.envelopes()).each (x) ->
       envelopes.push x
-    service = service(bus)
+    s = service(bus)
 
   describe 'given a new transaction', ->
     beforeEach (done) ->
       bus('transaction-new').write
-        "status": "closed"
+        "engine_result_code": 0
         "transaction": {
+          "TransactionType": 'Payment'
           "Account": "gnkEf9U3TzF2r5UUxZi463DTEm7wA3bfBY"
           "Amount": "10000000"
           "Destination": "gE39AWRXBQBpHJnLrgwymGp5DkcpCUoVDK"
@@ -43,6 +44,53 @@ describe 'service', ->
             to: 'gE39AWRXBQBpHJnLrgwymGp5DkcpCUoVDK'
             amount: '10000000'
             date: 465829980
+
+  describe 'given a non-transaction sent on the socket', ->
+    beforeEach (done)->
+      bus('transaction-new').write {
+        result: {}, status: 'success', type: 'response'
+      }
+      setTimeout done, 100
+
+    it 'does NOT write anything to mongo', ->
+      assert not oneEnvelopeMatching
+        topic: 'mongo-save'
+
+
+  describe 'given a non-success transaction sent on socket', ->
+    beforeEach (done)->
+      bus('transaction-new').write
+        "engine_result_code": 1234 # anything but 0
+        "transaction": {
+          "TransactionType": 'Payment'
+          "Account": "gnkEf9U3TzF2r5UUxZi463DTEm7wA3bfBY"
+          "Amount": "10000000"
+          "Destination": "gE39AWRXBQBpHJnLrgwymGp5DkcpCUoVDK"
+          "date": 465829980
+        }
+      setTimeout done, 100
+
+    it 'does NOT write anything to mongo', ->
+      assert not oneEnvelopeMatching
+        topic: 'mongo-save'
+
+  describe 'given a non-payment transaction sent on socket', ->
+    beforeEach (done)->
+      bus('transaction-new').write
+        "engine_result_code": 0
+        "transaction": {
+          "TransactionType": 'TrustSet'
+          "Account": "gnkEf9U3TzF2r5UUxZi463DTEm7wA3bfBY"
+          "Amount": "10000000"
+          "Destination": "gE39AWRXBQBpHJnLrgwymGp5DkcpCUoVDK"
+          "date": 465829980
+        }
+      setTimeout done, 100
+
+    it 'does NOT write anything to mongo', ->
+      assert not oneEnvelopeMatching
+        topic: 'mongo-save'
+
 
 
 describe.skip 'given a message', ->

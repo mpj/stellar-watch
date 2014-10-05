@@ -2,8 +2,10 @@ _ = require 'highland'
 
 service = (bus) ->
   _(bus('transaction-new'))
-    .map(_.get('transaction'))
-    .map((t) ->
+    .filter (event) -> event.engine_result_code is 0
+    .pluck('transaction').compact()
+    .filter (t) -> t.TransactionType is 'Payment'
+    .map( (t) ->
       document:
         from: t.Account
         to: t.Destination
