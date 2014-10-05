@@ -1,4 +1,4 @@
 stellar-watch
 =============
 
-A service that can do queries on Stellar that updates in real time, that are not offered by the Stellar API. It works by subscribing to a stellard and updating an internal mongo database with the transactions. The initial version of stellar-watch is only interested in recent transactions and keeps a rolling log. API consumers can set up mongo queries that are re-run (throttled) when new transactions come in and the result of the transaction is pushed out as a subscription if the result differed from the last time it was sent out. 
+A service that provides aggregates of transferred currencies/issuers on the stellar network, where transactions volume is within a certain range. It provides # of transactions, total transaction amount, currency, and issuer. The service will provide this as a stream of values, and leave sorting up to the consumer. When an aggregate is updated, this will simply be sent as any other value on the steam and the consumer will have to update it in it's set. 

@@ -1,7 +1,7 @@
 {
   "name": "stellar-watch",
   "version": "1.0.0",
-  "description": "A service that can do queries on Stellar that updates in real time, that are not offered by the Stellar API. ",
+  "description": "A service that provides aggregates of transferred currencies/issuers on the stellar network, where transactions volume is within a certain range. It provides # of transactions, total transaction amount, currency, and issuer. The service will provide this as a stream of values, and leave sorting up to the consumer. When an aggregate is updated, this will simply be sent as any other value on the steam and the consumer will have to update it in it's set. ",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
@@ -17,6 +17,13 @@
   },
   "homepage": "https://github.com/mpj/stellar-watch",
   "dependencies": {
-    "express": "~4.9.5"
+    "express": "~4.9.5",
+    "ws-json-client-stream": "~2.0.2",
+    "mout": "~0.10.0",
+    "snurra": "^3.0.0"
+  },
+  "devDependencies": {
+    "coffee-script": "~1.8.0",
+    "chai": "~1.9.2"
   }
 }
