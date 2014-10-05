@@ -12,8 +12,5 @@ service = (bus) ->
         date: t.date
       }
   ).pipe(bus('mongo-save'))
-  x.resume()
-
-  #_(bus('transaction-new')).each(console.log.bind(console, "omfg"))
 
 module.exports = service
