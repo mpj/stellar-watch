@@ -33,6 +33,7 @@ describe 'service', ->
           "Destination": "gE39AWRXBQBpHJnLrgwymGp5DkcpCUoVDK"
           "date": 465829980
         }
+        "validated": true
       setTimeout done, 100
 
     it 'write that transaction to mongo', ->
@@ -68,6 +69,25 @@ describe 'service', ->
           "Destination": "gE39AWRXBQBpHJnLrgwymGp5DkcpCUoVDK"
           "date": 465829980
         }
+        "validated": true
+      setTimeout done, 100
+
+    it 'does NOT write anything to mongo', ->
+      assert not oneEnvelopeMatching
+        topic: 'mongo-save'
+
+  describe 'given a non-validated transaction sent on socket', ->
+    beforeEach (done)->
+      bus('transaction-new').write
+        "engine_result_code": 0
+        "transaction": {
+          "TransactionType": 'Payment'
+          "Account": "gnkEf9U3TzF2r5UUxZi463DTEm7wA3bfBY"
+          "Amount": "10000000"
+          "Destination": "gE39AWRXBQBpHJnLrgwymGp5DkcpCUoVDK"
+          "date": 465829980
+        }
+        "validated": false
       setTimeout done, 100
 
     it 'does NOT write anything to mongo', ->
@@ -85,6 +105,7 @@ describe 'service', ->
           "Destination": "gE39AWRXBQBpHJnLrgwymGp5DkcpCUoVDK"
           "date": 465829980
         }
+        "validated": true
       setTimeout done, 100
 
     it 'does NOT write anything to mongo', ->
