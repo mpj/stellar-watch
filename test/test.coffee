@@ -34,7 +34,7 @@ describe 'service', ->
           "date": 465829980
         }
         "validated": true
-      setTimeout done, 100
+      setTimeout done, 10
 
     it 'write that transaction to mongo', ->
       assert oneEnvelopeMatching
@@ -43,15 +43,49 @@ describe 'service', ->
           document:
             from: 'gnkEf9U3TzF2r5UUxZi463DTEm7wA3bfBY'
             to: 'gE39AWRXBQBpHJnLrgwymGp5DkcpCUoVDK'
-            amount: '10000000'
+            amount:
+              currency: "STR"
+              value: '10000000'
             date: 465829980
+
+  describe 'given a transaction in a fiat currency', ->
+    beforeEach (done) ->
+      bus('transaction-new').write
+        "engine_result_code": 0
+        "transaction": {
+          "TransactionType": 'Payment'
+          "Account": "gnkEf9U3TzF2r5UUxZi463DTEm7wA3bfBY"
+          "Amount":  {
+            "currency": "USD",
+            "issuer": "gBAde4mkDijZatAdNhBzCsuC7GP4MzhA3B",
+            "value": "200"
+          }
+          "Destination": "gE39AWRXBQBpHJnLrgwymGp5DkcpCUoVDK"
+          "date": 465829980
+        }
+        "validated": true
+      setTimeout done, 10
+
+    it 'writes it to mongo', ->
+      assert oneEnvelopeMatching
+        topic: 'mongo-save'
+        message:
+          document:
+            from: 'gnkEf9U3TzF2r5UUxZi463DTEm7wA3bfBY'
+            to: 'gE39AWRXBQBpHJnLrgwymGp5DkcpCUoVDK'
+            amount:
+              currency: "USD",
+              issuer: "gBAde4mkDijZatAdNhBzCsuC7GP4MzhA3B",
+              value: "200"
+            date: 465829980
+
 
   describe 'given a non-transaction sent on the socket', ->
     beforeEach (done)->
       bus('transaction-new').write {
         result: {}, status: 'success', type: 'response'
       }
-      setTimeout done, 100
+      setTimeout done, 10
 
     it 'does NOT write anything to mongo', ->
       assert not oneEnvelopeMatching
@@ -70,7 +104,7 @@ describe 'service', ->
           "date": 465829980
         }
         "validated": true
-      setTimeout done, 100
+      setTimeout done, 10
 
     it 'does NOT write anything to mongo', ->
       assert not oneEnvelopeMatching
@@ -88,7 +122,7 @@ describe 'service', ->
           "date": 465829980
         }
         "validated": false
-      setTimeout done, 100
+      setTimeout done, 10
 
     it 'does NOT write anything to mongo', ->
       assert not oneEnvelopeMatching
@@ -106,7 +140,7 @@ describe 'service', ->
           "date": 465829980
         }
         "validated": true
-      setTimeout done, 100
+      setTimeout done, 10
 
     it 'does NOT write anything to mongo', ->
       assert not oneEnvelopeMatching

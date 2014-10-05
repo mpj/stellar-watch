@@ -1,4 +1,5 @@
 _ = require 'highland'
+isObject = require 'mout/lang/isObject'
 
 service = (bus) ->
   _(bus('transaction-new'))
@@ -6,12 +7,13 @@ service = (bus) ->
     .filter( (event) -> event.validated )
     .pluck('transaction').compact()
     .filter((t) -> t.TransactionType is 'Payment')
-
     .map( (t) ->
       document:
         from: t.Account
         to: t.Destination
-        amount: t.Amount
+        amount: if isObject(t.Amount) then t.Amount else
+          currency: 'STR'
+          value: t.Amount
         date: t.date
     )
     .pipe bus 'mongo-save'
