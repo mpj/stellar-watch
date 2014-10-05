@@ -20,7 +20,8 @@
     "express": "~4.9.5",
     "ws-json-client-stream": "~2.0.2",
     "mout": "~0.10.0",
-    "snurra": "^3.0.0"
+    "snurra": "^3.0.0",
+    "mongo-write-stream": "~1.1.0"
   },
   "devDependencies": {
     "coffee-script": "~1.8.0",
